@@ -20,7 +20,7 @@ Predicts a shopper's intent in real-time during their browsing session and dynam
 
 **Latency constraint:** < 200ms p99 per prediction.
 
-\---
+
 
 ## Live Demo
 
@@ -28,7 +28,7 @@ Predicts a shopper's intent in real-time during their browsing session and dynam
 
 The demo simulates a real shopping session with sliders for page views, cart adds, searches, and user history. It returns predicted intent, purchase probability, LTV estimate, and recommended actions in real-time.
 
-\---
+
 
 ## Architecture
 
@@ -67,7 +67,7 @@ User Action
 
 **Production stack:** Kafka, Snowflake, Feast, Redis, Kubernetes (EKS), MLflow.
 
-\---
+
 
 ## Quick Start
 
@@ -91,7 +91,7 @@ make train
 make serve
 ```
 
-\---
+
 
 ## API Endpoints
 
@@ -145,7 +145,7 @@ curl -X POST http://localhost:8000/predict \\
 }
 ```
 
-\---
+
 
 ## Project Structure
 
@@ -167,7 +167,7 @@ intent-prediction-engine/
 └── scripts/             # Operational scripts
 ```
 
-\---
+
 
 ## Model Architecture
 
@@ -187,7 +187,7 @@ Event Sequence -> Transformer Encoder -> Shared Representation
 * **Uncertainty weighting:** Automatically balances task losses
 * **Export:** ONNX for CPU-optimized inference
 
-\---
+
 
 ## Business Impact (Simulated)
 
@@ -197,7 +197,6 @@ Event Sequence -> Transformer Encoder -> Shared Representation
 |Discount Burn|18% revenue|12% revenue|+$28M margin|
 |Customer Support Cost|$0.45/session|$0.32/session|-$6.5M cost|
 
-\---
 
 ## Tech Stack
 
@@ -213,7 +212,7 @@ Event Sequence -> Transformer Encoder -> Shared Representation
 |**Monitoring**|Prometheus, Grafana, PagerDuty|
 |**Causal**|Custom Thompson Sampling, doubly robust ATE|
 
-\---
+
 
 ## Testing
 
@@ -224,7 +223,7 @@ make lint           # Black, isort, flake8, mypy
 make format         # Auto-format code
 ```
 
-\---
+
 
 ## Deployment
 
@@ -243,7 +242,7 @@ git add . \&\& git commit -m "Deploy" \&\& git push
 2. Connect to Render (Docker environment)
 3. Auto-deploys on every push
 
-\---
+
 
 ## Documentation
 
@@ -253,13 +252,13 @@ git add . \&\& git commit -m "Deploy" \&\& git push
 * [Incident Response](docs/runbooks/incident_response.md)
 * [Retraining Procedure](docs/runbooks/retraining_procedure.md)
 
-\---
+
 
 ## License
 
 MIT
 
-\---
+
 
 Built by [Your Name](https://linkedin.com/in/yourprofile) | [Email](mailto:you@email.com)
 

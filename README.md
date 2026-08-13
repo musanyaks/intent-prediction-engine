@@ -2,12 +2,10 @@
 
 Real-time customer intent prediction and dynamic experience optimization for e-commerce.
 
-[!\[Live Demo](https://img.shields.io/badge/Live\_Demo-HuggingFace\_Spaces-blue)](https://huggingface.co/spaces/yourname/intent-prediction-demo)
-[!\[Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
-[!\[FastAPI](https://img.shields.io/badge/FastAPI-0.104-green)](https://fastapi.tiangolo.com/)
-[!\[PyTorch](https://img.shields.io/badge/PyTorch-2.1-red)](https://pytorch.org/)
-
-\---
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B)](https://intent-demo.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green)](https://fastapi.tiangolo.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.1-red)](https://pytorch.org/)
 
 ## What It Does
 

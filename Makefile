@@ -1,0 +1,1 @@
+.PHONY: help install test lint format clean train evaluate deploy serve docker-build docker-push

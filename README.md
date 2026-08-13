@@ -24,7 +24,7 @@ Predicts a shopper's intent in real-time during their browsing session and dynam
 
 ## Live Demo
 
-**Try it now:** [Hugging Face Spaces](https://huggingface.co/spaces/yourname/intent-prediction-demo)
+**Try it now:** [Streamlit Cloud](https://intent-demo.streamlit.app/)
 
 The demo simulates a real shopping session with sliders for page views, cart adds, searches, and user history. It returns predicted intent, purchase probability, LTV estimate, and recommended actions in real-time.
 
@@ -260,5 +260,5 @@ MIT
 
 
 
-Built by [Your Name](https://linkedin.com/in/yourprofile) | [Email](mailto:you@email.com)
+Built by [Musa Rioba](https://linkedin.com/in/musarioba) | [Email](mailto:nyakerabachi@gmail.com)
 

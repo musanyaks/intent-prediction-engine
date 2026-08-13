@@ -1,532 +1,532 @@
-\# Intent Prediction Engine (Project MERLIN)
+# \# Intent Prediction Engine (Project MERLIN)
 
+# 
 
+# Real-time customer intent prediction and dynamic experience optimization for e-commerce.
 
-Real-time customer intent prediction and dynamic experience optimization for e-commerce.
+# 
 
+# \[!\[Live Demo](https://img.shields.io/badge/Live\_Demo-Streamlit-FF4B4B)](https://intent-demo.streamlit.app/)
 
+# \[!\[Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
 
-\[!\[Live Demo](https://img.shields.io/badge/Live\_Demo-Streamlit-FF4B4B)](https://intent-demo.streamlit.app/)
+# \[!\[FastAPI](https://img.shields.io/badge/FastAPI-0.104-green)](https://fastapi.tiangolo.com/)
 
-\[!\[Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
+# \[!\[PyTorch](https://img.shields.io/badge/PyTorch-2.1-red)](https://pytorch.org/)
 
-\[!\[FastAPI](https://img.shields.io/badge/FastAPI-0.104-green)](https://fastapi.tiangolo.com/)
+# 
 
-\[!\[PyTorch](https://img.shields.io/badge/PyTorch-2.1-red)](https://pytorch.org/)
+# \---
 
+# 
 
+# \## What It Does
 
-\---
+# 
 
+# Predicts a shopper's intent in real-time during their browsing session and dynamically adapts the experience, pricing, and support intervention to maximize both conversion and margin.
 
+# 
 
-\## What It Does
+# | Output | Type | Business Use |
 
+# |--------|------|-------------|
 
+# | `intent\_class` | browse / compare / ready-to-buy / at-risk | Route to different UX flows |
 
-Predicts a shopper's intent in real-time during their browsing session and dynamically adapts the experience, pricing, and support intervention to maximize both conversion and margin.
+# | `purchase\_prob` | Probability \[0,1] | Trigger urgency mechanisms |
 
+# | `ltv\_30d` | Continuous ($) | Decide discount depth |
 
+# | `churn\_7d` | Probability \[0,1] | Trigger retention offers |
 
-| Output | Type | Business Use |
+# 
 
-|--------|------|-------------|
+# \*\*Latency constraint:\*\* < 200ms p99 per prediction.
 
-| `intent\_class` | browse / compare / ready-to-buy / at-risk | Route to different UX flows |
+# 
 
-| `purchase\_prob` | Probability \[0,1] | Trigger urgency mechanisms |
+# \---
 
-| `ltv\_30d` | Continuous ($) | Decide discount depth |
+# 
 
-| `churn\_7d` | Probability \[0,1] | Trigger retention offers |
+# \## Live Demo
 
+# 
 
+# \*\*Try it now:\*\* \[Streamlit Cloud](https://intent-demo.streamlit.app/)
 
-\*\*Latency constraint:\*\* < 200ms p99 per prediction.
+# 
 
+# The demo simulates a real shopping session with sliders for page views, cart adds, searches, and user history. It returns predicted intent, purchase probability, LTV estimate, and recommended actions in real-time.
 
+# 
 
-\---
+# \---
 
+# 
 
+# \## Architecture
 
-\## Live Demo
+# 
 
+# ```
 
+# User Action
 
-\*\*Try it now:\*\* \[Streamlit Cloud](https://intent-demo.streamlit.app/)
+# &#x20;   |
 
+# &#x20;   v
 
+# +------------------+
 
-The demo simulates a real shopping session with sliders for page views, cart adds, searches, and user history. It returns predicted intent, purchase probability, LTV estimate, and recommended actions in real-time.
+# |  FastAPI         |  <- Pydantic validation, structured logging
 
+# |  /predict        |
 
+# +------------------+
 
-\---
+# &#x20;   |
 
+# &#x20;   v
 
+# +------------------+     +------------------+
 
-\## Architecture
+# |  Feature         |     |  Redis Cache     |
 
+# |  Retrieval       | <-> |  (hot features)  |
 
+# |  (< 30ms)        |     +------------------+
 
-```
+# +------------------+
 
-User Action
+# &#x20;   |
 
-&#x20;   |
+# &#x20;   v
 
-&#x20;   v
+# +------------------+
 
-+------------------+
+# |  ONNX Runtime    |  <- Multi-task Transformer
 
-|  FastAPI         |  <- Pydantic validation, structured logging
+# |  Inference       |     Intent | Purchase | LTV | Churn
 
-|  /predict        |
+# |  (< 50ms)        |
 
-+------------------+
+# +------------------+
 
-&#x20;   |
+# &#x20;   |
 
-&#x20;   v
+# &#x20;   v
 
-+------------------+     +------------------+
+# +------------------+
 
-|  Feature         |     |  Redis Cache     |
+# |  Business Logic  |  <- Dynamic discounting, guardrails
 
-|  Retrieval       | <-> |  (hot features)  |
+# |  (< 100ms)       |
 
-|  (< 30ms)        |     +------------------+
+# +------------------+
 
-+------------------+
+# &#x20;   |
 
-&#x20;   |
+# &#x20;   v
 
-&#x20;   v
+# &#x20; Streamlit Dashboard
 
-+------------------+
+# ```
 
-|  ONNX Runtime    |  <- Multi-task Transformer
+# 
 
-|  Inference       |     Intent | Purchase | LTV | Churn
+# \*\*Production stack:\*\* Kafka, Snowflake, Feast, Redis, Kubernetes (EKS), MLflow.
 
-|  (< 50ms)        |
+# 
 
-+------------------+
+# \---
 
-&#x20;   |
+# 
 
-&#x20;   v
+# \## Quick Start
 
-+------------------+
+# 
 
-|  Business Logic  |  <- Dynamic discounting, guardrails
+# \### Local (Docker)
 
-|  (< 100ms)       |
+# 
 
-+------------------+
+# ```bash
 
-&#x20;   |
+# git clone https://github.com/yourname/intent-prediction-engine.git
 
-&#x20;   v
+# cd intent-prediction-engine
 
-&#x20; Streamlit Dashboard
+# docker compose up --build
 
-```
+# ```
 
+# 
 
+# \- Dashboard: http://localhost:8501
 
-\*\*Production stack:\*\* Kafka, Snowflake, Feast, Redis, Kubernetes (EKS), MLflow.
+# \- API docs: http://localhost:8000/docs
 
+# 
 
+# \### Python Environment
 
-\---
+# 
 
+# ```bash
 
+# poetry install --with dev
 
-\## Quick Start
+# make test
 
+# make train
 
+# make serve
 
-\### Local (Docker)
+# ```
 
+# 
 
+# \---
 
-```bash
+# 
 
-git clone https://github.com/yourname/intent-prediction-engine.git
+# \## API Endpoints
 
-cd intent-prediction-engine
+# 
 
-docker compose up --build
+# | Endpoint | Method | Description |
 
-```
+# |----------|--------|-------------|
 
+# | `/health` | GET | Service health \& model status |
 
+# | `/predict` | POST | Intent prediction for a user session |
 
-\- Dashboard: http://localhost:8501
+# 
 
-\- API docs: http://localhost:8000/docs
+# \*\*Example request:\*\*
 
+# 
 
+# ```bash
 
-\### Python Environment
+# curl -X POST http://localhost:8000/predict \\
 
+# &#x20; -H "Content-Type: application/json" \\
 
+# &#x20; -d '{
 
-```bash
+# &#x20;   "user\_id": "usr\_abc123",
 
-poetry install --with dev
+# &#x20;   "session\_id": "sess\_xyz789",
 
-make test
+# &#x20;   "events": \[
 
-make train
+# &#x20;     {"event\_type": "page\_view", "timestamp": "2026-08-01T10:00:00Z", "product\_id": null},
 
-make serve
+# &#x20;     {"event\_type": "search", "timestamp": "2026-08-01T10:00:15Z", "product\_id": null},
 
-```
+# &#x20;     {"event\_type": "cart\_add", "timestamp": "2026-08-01T10:02:00Z", "product\_id": "prod\_laptop\_001"}
 
+# &#x20;   ],
 
+# &#x20;   "user\_history\_orders": 3,
 
-\---
+# &#x20;   "user\_avg\_order\_value": 450.0,
 
+# &#x20;   "device\_type": "mobile"
 
+# &#x20; }'
 
-\## API Endpoints
+# ```
 
+# 
 
+# \*\*Example response:\*\*
 
-| Endpoint | Method | Description |
+# 
 
-|----------|--------|-------------|
+# ```json
 
-| `/health` | GET | Service health \& model status |
+# {
 
-| `/predict` | POST | Intent prediction for a user session |
+# &#x20; "user\_id": "usr\_abc123",
 
+# &#x20; "session\_id": "sess\_xyz789",
 
+# &#x20; "intent": {
 
-\*\*Example request:\*\*
+# &#x20;   "class": "ready\_to\_buy",
 
+# &#x20;   "confidence": 0.78,
 
+# &#x20;   "probabilities": {
 
-```bash
+# &#x20;     "browse": 0.05,
 
-curl -X POST http://localhost:8000/predict \\
+# &#x20;     "compare": 0.12,
 
-&#x20; -H "Content-Type: application/json" \\
+# &#x20;     "ready\_to\_buy": 0.78,
 
-&#x20; -d '{
+# &#x20;     "at\_risk": 0.05
 
-&#x20;   "user\_id": "usr\_abc123",
+# &#x20;   }
 
-&#x20;   "session\_id": "sess\_xyz789",
+# &#x20; },
 
-&#x20;   "events": \[
+# &#x20; "purchase\_probability": 0.78,
 
-&#x20;     {"event\_type": "page\_view", "timestamp": "2026-08-01T10:00:00Z", "product\_id": null},
+# &#x20; "ltv\_30d\_estimate": 350.0,
 
-&#x20;     {"event\_type": "search", "timestamp": "2026-08-01T10:00:15Z", "product\_id": null},
+# &#x20; "churn\_7d\_probability": 0.02,
 
-&#x20;     {"event\_type": "cart\_add", "timestamp": "2026-08-01T10:02:00Z", "product\_id": "prod\_laptop\_001"}
+# &#x20; "recommended\_action": "show\_urgency\_messaging",
 
-&#x20;   ],
+# &#x20; "discount\_depth\_pct": 0.0,
 
-&#x20;   "user\_history\_orders": 3,
+# &#x20; "explanation": "User shows strong purchase signals.",
 
-&#x20;   "user\_avg\_order\_value": 450.0,
+# &#x20; "inference\_time\_ms": 45.2
 
-&#x20;   "device\_type": "mobile"
+# }
 
-&#x20; }'
+# ```
 
-```
+# 
 
+# \---
 
+# 
 
-\*\*Example response:\*\*
+# \## Project Structure
 
+# 
 
+# ```
 
-```json
+# intent-prediction-engine/
 
-{
+# ├── config/              # Environment-specific configs (Hydra/OmegaConf)
 
-&#x20; "user\_id": "usr\_abc123",
+# ├── src/
 
-&#x20; "session\_id": "sess\_xyz789",
+# │   ├── data/            # ETL: Kafka, Snowflake, validation
 
-&#x20; "intent": {
+# │   ├── features/        # Real-time \& batch feature engineering
 
-&#x20;   "class": "ready\_to\_buy",
+# │   ├── models/          # PyTorch architecture, training, ONNX export
 
-&#x20;   "confidence": 0.78,
+# │   ├── inference/       # FastAPI predictor, feature retrieval, post-processing
 
-&#x20;   "probabilities": {
+# │   ├── causal/          # Thompson Sampling bandit, ATE estimation
 
-&#x20;     "browse": 0.05,
+# │   ├── monitoring/      # Drift detection, performance tracking, alerting
 
-&#x20;     "compare": 0.12,
+# │   └── utils/           # Logging, config loader, constants
 
-&#x20;     "ready\_to\_buy": 0.78,
+# ├── tests/               # Unit \& integration tests
 
-&#x20;     "at\_risk": 0.05
+# ├── notebooks/           # EDA \& experiment tracking
 
-&#x20;   }
+# ├── deployment/          # Docker, K8s, Terraform, Helm
 
-&#x20; },
+# ├── docs/                # Architecture docs, ADRs, runbooks
 
-&#x20; "purchase\_probability": 0.78,
+# └── scripts/             # Operational scripts
 
-&#x20; "ltv\_30d\_estimate": 350.0,
+# ```
 
-&#x20; "churn\_7d\_probability": 0.02,
+# 
 
-&#x20; "recommended\_action": "show\_urgency\_messaging",
+# \---
 
-&#x20; "discount\_depth\_pct": 0.0,
+# 
 
-&#x20; "explanation": "User shows strong purchase signals.",
+# \## Model Architecture
 
-&#x20; "inference\_time\_ms": 45.2
+# 
 
-}
+# Multi-task Transformer with uncertainty weighting (Kendall et al.):
 
-```
+# 
 
+# ```
 
+# Event Sequence -> Transformer Encoder -> Shared Representation
 
-\---
+# &#x20;                                             |
 
+# &#x20;         +------------------+------------------+------------------+
 
+# &#x20;         |                  |                  |                  |
 
-\## Project Structure
+# &#x20;   Intent Classifier   Purchase Head      LTV Regressor     Churn Head
 
+# &#x20;   (4-class)           (Sigmoid)          (ReLU)            (Sigmoid)
 
+# ```
 
-```
+# 
 
-intent-prediction-engine/
+# \- \*\*Sequence encoder:\*\* Transformer over clickstream events
 
-├── config/              # Environment-specific configs (Hydra/OmegaConf)
+# \- \*\*Context features:\*\* User history + product embeddings
 
-├── src/
+# \- \*\*Uncertainty weighting:\*\* Automatically balances task losses
 
-│   ├── data/            # ETL: Kafka, Snowflake, validation
+# \- \*\*Export:\*\* ONNX for CPU-optimized inference
 
-│   ├── features/        # Real-time \& batch feature engineering
+# 
 
-│   ├── models/          # PyTorch architecture, training, ONNX export
+# \---
 
-│   ├── inference/       # FastAPI predictor, feature retrieval, post-processing
+# 
 
-│   ├── causal/          # Thompson Sampling bandit, ATE estimation
+# \## Business Impact (Simulated)
 
-│   ├── monitoring/      # Drift detection, performance tracking, alerting
+# 
 
-│   └── utils/           # Logging, config loader, constants
+# | Metric | Before | After | Annual Value |
 
-├── tests/               # Unit \& integration tests
+# |--------|--------|-------|-------------|
 
-├── notebooks/           # EDA \& experiment tracking
+# | Conversion Rate | 12.0% | 14.5% | +$60M GMV |
 
-├── deployment/          # Docker, K8s, Terraform, Helm
+# | Discount Burn | 18% revenue | 12% revenue | +$28M margin |
 
-├── docs/                # Architecture docs, ADRs, runbooks
+# | Customer Support Cost | $0.45/session | $0.32/session | -$6.5M cost |
 
-└── scripts/             # Operational scripts
+# 
 
-```
+# \---
 
+# 
 
+# \## Tech Stack
 
-\---
+# 
 
+# | Layer | Tools |
 
+# |-------|-------|
 
-\## Model Architecture
+# | \*\*Modeling\*\* | PyTorch, ONNX, scikit-learn, Optuna |
 
+# | \*\*API\*\* | FastAPI, Pydantic, Uvicorn |
 
+# | \*\*Frontend\*\* | Streamlit |
 
-Multi-task Transformer with uncertainty weighting (Kendall et al.):
+# | \*\*Data\*\* | Kafka, Snowflake, pandas, Pandera |
 
+# | \*\*Features\*\* | Feast, Redis |
 
+# | \*\*Training\*\* | MLflow, SageMaker |
 
-```
+# | \*\*Deployment\*\* | Docker, Kubernetes, Terraform, Helm |
 
-Event Sequence -> Transformer Encoder -> Shared Representation
+# | \*\*Monitoring\*\* | Prometheus, Grafana, PagerDuty |
 
-&#x20;                                             |
+# | \*\*Causal\*\* | Custom Thompson Sampling, doubly robust ATE |
 
-&#x20;         +------------------+------------------+------------------+
+# 
 
-&#x20;         |                  |                  |                  |
+# \---
 
-&#x20;   Intent Classifier   Purchase Head      LTV Regressor     Churn Head
+# 
 
-&#x20;   (4-class)           (Sigmoid)          (ReLU)            (Sigmoid)
+# \## Testing
 
-```
+# 
 
+# ```bash
 
+# make test           # Unit tests
 
-\- \*\*Sequence encoder:\*\* Transformer over clickstream events
+# make test-integration  # Integration tests (needs Docker services)
 
-\- \*\*Context features:\*\* User history + product embeddings
+# make lint           # Black, isort, flake8, mypy
 
-\- \*\*Uncertainty weighting:\*\* Automatically balances task losses
+# make format         # Auto-format code
 
-\- \*\*Export:\*\* ONNX for CPU-optimized inference
+# ```
 
+# 
 
+# \---
 
-\---
+# 
 
+# \## Deployment
 
+# 
 
-\## Business Impact (Simulated)
+# \### Streamlit Community Cloud (Free)
 
+# 
 
+# 1\. Push `streamlit\_app.py` + `requirements.txt` to a public GitHub repo
 
-| Metric | Before | After | Annual Value |
+# 2\. Go to \[streamlit.io/cloud](https://streamlit.io/cloud) and connect your repo
 
-|--------|--------|-------|-------------|
+# 3\. Deploy — auto-updates on every push
 
-| Conversion Rate | 12.0% | 14.5% | +$60M GMV |
+# 
 
-| Discount Burn | 18% revenue | 12% revenue | +$28M margin |
+# \*\*Live demo:\*\* https://intent-demo.streamlit.app/
 
-| Customer Support Cost | $0.45/session | $0.32/session | -$6.5M cost |
+# 
 
+# \### Render (Free Tier)
 
+# 
 
-\---
+# 1\. Push repo to GitHub
 
+# 2\. Connect to Render (Python environment)
 
+# 3\. Auto-deploys on every push
 
-\## Tech Stack
+# 
 
+# \---
 
+# 
 
-| Layer | Tools |
+# \## Documentation
 
-|-------|-------|
+# 
 
-| \*\*Modeling\*\* | PyTorch, ONNX, scikit-learn, Optuna |
+# \- \[System Architecture](docs/architecture/system\_architecture.md)
 
-| \*\*API\*\* | FastAPI, Pydantic, Uvicorn |
+# \- \[Inference Pipeline](docs/architecture/inference\_pipeline.md)
 
-| \*\*Frontend\*\* | Streamlit |
+# \- \[API Specification](docs/api/prediction\_api\_spec.md)
 
-| \*\*Data\*\* | Kafka, Snowflake, pandas, Pandera |
+# \- \[Incident Response](docs/runbooks/incident\_response.md)
 
-| \*\*Features\*\* | Feast, Redis |
+# \- \[Retraining Procedure](docs/runbooks/retraining\_procedure.md)
 
-| \*\*Training\*\* | MLflow, SageMaker |
+# 
 
-| \*\*Deployment\*\* | Docker, Kubernetes, Terraform, Helm |
+# \---
 
-| \*\*Monitoring\*\* | Prometheus, Grafana, PagerDuty |
+# 
 
-| \*\*Causal\*\* | Custom Thompson Sampling, doubly robust ATE |
+# \## License
 
+# 
 
+# MIT
 
-\---
+# 
 
+# \---
 
+# 
 
-\## Testing
-
-
-
-```bash
-
-make test           # Unit tests
-
-make test-integration  # Integration tests (needs Docker services)
-
-make lint           # Black, isort, flake8, mypy
-
-make format         # Auto-format code
-
-```
-
-
-
-\---
-
-
-
-\## Deployment
-
-
-
-\### Streamlit Community Cloud (Free)
-
-
-
-1\. Push `streamlit\_app.py` + `requirements.txt` to a public GitHub repo
-
-2\. Go to \[streamlit.io/cloud](https://streamlit.io/cloud) and connect your repo
-
-3\. Deploy — auto-updates on every push
-
-
-
-\*\*Live demo:\*\* https://intent-demo.streamlit.app/
-
-
-
-\### Render (Free Tier)
-
-
-
-1\. Push repo to GitHub
-
-2\. Connect to Render (Python environment)
-
-3\. Auto-deploys on every push
-
-
-
-\---
-
-
-
-\## Documentation
-
-
-
-\- \[System Architecture](docs/architecture/system\_architecture.md)
-
-\- \[Inference Pipeline](docs/architecture/inference\_pipeline.md)
-
-\- \[API Specification](docs/api/prediction\_api\_spec.md)
-
-\- \[Incident Response](docs/runbooks/incident\_response.md)
-
-\- \[Retraining Procedure](docs/runbooks/retraining\_procedure.md)
-
-
-
-\---
-
-
-
-\## License
-
-
-
-MIT
-
-
-
-\---
-
-
-
-Built by \[Your Name](https://linkedin.com/in/yourprofile) | \[Email](mailto:you@email.com)
+# Built by \[Your Name](https://linkedin.com/in/yourprofile) | \[Email](mailto:you@email.com)
 
 
 
